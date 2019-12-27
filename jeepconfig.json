@@ -1,0 +1,17 @@
+{
+	"calibrationpoints": 
+	[
+		{
+			"latitude": 47.614134,
+			"longitude": -122.193598,
+			"elevation": 147,
+			"variance": 0.000125
+		},
+		{
+			"latitude": 47.534899,
+			"longitude": -122.314857,
+			"elevation": 6,
+			"variance": 0.0001
+		}
+	]
+}
