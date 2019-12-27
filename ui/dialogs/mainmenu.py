@@ -16,7 +16,7 @@ class MainMenuView(Dialog):
         xbottom = 110
         xinc = 30
         self.menuItem1 = Button(xstart, xtop, "1", "monospace", size)
-        self.menuText1 = TextField(xstart+30, xtop, "VASCAR", "monospace", size)
+        self.menuText1 = TextField(xstart+30, xtop, "TimeZone", "monospace", size)
         self.registerWidget(Widget(self.menuItem1,self.getPhysicalXYOffsetOfSurface()),self.objectID)
         self.registerWidget(Widget(self.menuText1,self.getPhysicalXYOffsetOfSurface()),self.objectID)
 
