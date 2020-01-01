@@ -1,6 +1,6 @@
 # Primary Flight Display
 
-I thought it would be fun to make a partial replica of a 737-800NG primary flight display for my Jeep.  I re-created the features that are most recognizable, and that would be most useful in a vehicle.  Not everything works yet, and the components aren't finished, but the main components except for the artifical horizon work.  I also added some features that aren't normally on a PFD, such as inside and outiside air temperature and humidity.
+I thought it would be fun to make a partial replica of a 737-800NG primary flight display for my Jeep.  I re-created the features that are most recognizable, and that would be most useful in a vehicle.  Not everything works yet, and the components aren't finished, but the main components except for the artifical horizon work.  I also added some features that aren't normally on a PFD, such as inside and outiside air temperature and humidity, time, and status information.
 
 It runs on the Raspberry Pi platform.  Here's what I'm using:
 * [Raspberry Pi 3 Model B+][9]
@@ -16,15 +16,15 @@ Here is what it looks like assembled and in context:
 
 ## Installation
 
-Dependencies include [pygame][12] and [numpy][13] for graphics and data processing.  When running on the RPi, [ft5406][14] is needed for touch event handling.
+The PFD requires python3.  The main dependencies are [pygame][12] and [numpy][13], for graphics and data processing.  When running on the RPi, [ft5406][14] is needed for touch event handling.  Otherwise it is mainly platform independent, except that the fonts don't always render correctly outside of Raspbian/Ubuntu.
 
 Install main dependencies:
 ```
-$ sudo apt install pygame
+$ pip3 install pygame
 ```
 
 ```
-$ sudo apt install numpy
+$ pip3 install numpy
 ```
 
 Install ft5406:
@@ -54,12 +54,12 @@ Each time a pilot flies a real airplane, they need to adjust the altimeter so th
 * Touch or click the "Baro Set" button on the display
   * The current sea level pressure is displayed in Hectopascals
 * Use the arrows to adjust each number
-  * Either adjust the values to match the sea level pressure (in hPa) of the nearest airport, or
+  * Either adjust the values to match the sea level pressure (in hPa) reported by the nearest airport, or
   * Adjust the values until the smaller altitude value matches the elevation of your current location
 
 ![Baro Set](images/BaroSet.png)
 
-There are currently two alternate mechanisms for altimeter correction.  You can create calibration waypoints that will automatically adjust the altimeter to match your current elevation when you traverse the waypoint.  To do this, you can add your own waypoints to (jeepconfig.json)[jeepconfig.json].  Here is an example:
+There are currently two alternate mechanisms for altimeter correction.  You can create calibration waypoints that will automatically adjust the altimeter to match your current elevation when you traverse the waypoint.  To do this, you can add your own waypoints to [jeepconfig.json](jeepconfig.json).  Here is an example:
 
 ```
 {
@@ -74,17 +74,17 @@ There are currently two alternate mechanisms for altimeter correction.  You can 
 ...
 ```
 
-You just specify the coordinates of the waypoint in decimal degrees, then specify how far away from the waypoint you need to be to trigger it, and finally specify what the elevation is at that waypoint.  For example, if you want to trigger a calibration when you traverse 47.6140, -122.1930, and you specify a variance of 0.0001, it will trigger if you are within the bounding box:
+You just specify the coordinates of the waypoint in decimal degrees, then specify how far away from the waypoint is needed to trigger it, and finally specify what the elevation is at that waypoint.  For example, if you want to trigger a calibration when you traverse 47.6140, -122.1930, and you specify a variance of 0.0001, it will trigger if you are within the bounding box:
 * 47.6139, -122.1929
 * 47.6141, -122.1931
 
-The other mechanism for altimeter correction is automatic elevation state saving.  As you drive around, the code regularly writes the current elevation to a file.  When the RPi is shut off, the file contains the last known elevation (presumably the place you parked).  When you turn on the RPi again, it reads the file and calculates the current sea level pressure based on the pressure at the current elevation.  This happens automatically at startup, so make sure to wait to move the vehicle until it has loaded the state file.  
+The other mechanism for altimeter correction is automatic elevation state saving.  As you drive around, the current elevation is regularly written to a file.  When the RPi is shut off, the file contains the last known elevation (typically of the place you parked).  When you turn on the RPi again, it reads the file and calculates the current sea level pressure based on the pressure at the current elevation.  This happens automatically at startup, so make sure to wait to move the vehicle until it has loaded the state file.  
 
 ## Heading calibration
 
 Since the accelerometer data is oriented as 0 degrees forward instead of 0 degrees north, the code has to find the offset to true north.  It does this by continuously monitoring the GPS bearing parameter, and when it has changed little for the last several seconds, it averages the GPS bearing and accelerometer bearing, and calculates the average difference between the two.  From that point on, the display will show the accelerometer bearing plus the difference (offset).  As you drive around, the offset will update again when you are driving straight.
 
-The bearing offset is also stored in the same state file that contains the last known elevation, and it is restored on power up.  That's another reason to keep the vehicle stopped until the PFD is up and receiving data.  Since the heading indicator and altimeter use the accelerometer and pressure sensors, they provide data even when the GPS signal is lost.
+The bearing offset is also stored in the same state file that contains the last known elevation, and it is restored on power up.  That's another reason to keep the vehicle stopped until the PFD is up and receiving data.  Since the heading indicator and altimeter use the accelerometer and pressure sensors, the display still update even when the GPS signal is lost, like when driving through a tunnel.
 
 
 
