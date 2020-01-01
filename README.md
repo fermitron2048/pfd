@@ -1,6 +1,6 @@
 # Primary Flight Display
 
-I thought it would be fun to make a partial replica of a 737-800NG primary flight display for my Jeep.  I re-created the features that are most recognizable, and that would be most useful in a vehicle.  Not everything works yet, and the components aren't finished, but the main components except for the artifical horizon work.  I also added some features that aren't normally on a PFD, such as inside and outiside air temperature and humidity, time, and status information.
+I thought it would be fun to make a partial replica of a 737-800NG primary flight display for my Jeep.  I re-created the features that are most recognizable, and that would be most useful in a vehicle.  Not everything is finished yet, but the main components work, except for the artifical horizon.  I also added some features that aren't normally on a PFD, such as inside and outiside air temperature and humidity, time, and status information.
 
 It runs on the Raspberry Pi platform.  Here's what I'm using:
 * [Raspberry Pi 3 Model B+][9]
@@ -9,9 +9,9 @@ It runs on the Raspberry Pi platform.  Here's what I'm using:
 
 ![Primary Flight Display](images/PFD.png)
 
-You can get the simulator up and running in Ubuntu, and see it in action by replaying canned data.  In order to use it in a vehicle, you'll need to make one or both of the [sensor packs](https://github.com/fermitron2048/pfd/tree/master/sensors).  The Main Sensors include a [GPS receiver][1] for location and orientation, a [BNO055][2] accelerometer/gyroscope for yaw, pitch, and roll angles, a [BME280][3] sensor for pressure/temperature/humidity, and a [TSL2561][4] light sensor for dimming the display.  I'm using an [ESP32][5] microcontroller, which supports the GPS receiver and WiFi for streaming parameters to the Raspberry Pi at 10Hz.  The OAT Baro sensor pack include two [BMP388][6] low noise pressure sensors, and a [DS18B20][7] weatherproof temperature sensor for outside air temperature.  It uses the [ESP8266][8] microcontroller, which is lower cost and speed.  The BMP388's can be used as precision altimiters, and the code averages the outputs together for increased accuracy.
+You can get the simulator up and running in Ubuntu, and see it in action by replaying canned data.  In order to use it in a vehicle, you'll need to make one or both of the [sensor packs](https://github.com/fermitron2048/pfd/tree/master/sensors).  The Main Sensors include a [GPS receiver][1] for location and orientation, a [BNO055][2] accelerometer/gyroscope for yaw, pitch, and roll angles, a [BME280][3] sensor for pressure and temperature/humidity (displayed above and right of center), and a [TSL2561][4] light sensor for dimming the display.  I'm using an [ESP32][5] microcontroller, which supports the GPS receiver and WiFi for streaming parameters to the Raspberry Pi at 10Hz.  The OAT Baro sensor pack include two [BMP388][6] low noise pressure sensors, and a [DS18B20][7] weatherproof temperature sensor for outside air temperature (displayed above and left of center).  It uses the [ESP8266][8] microcontroller, which is lower cost and speed.  The BMP388's can be used as precision altimiters, and the code averages the outputs together for increased accuracy.
 
-Here is what it looks like assembled and in context:
+Here is what it looks like assembled:
 ![PFD in Jeep](images/IMG_3568.jpg)
 
 ## Installation
@@ -84,9 +84,19 @@ The other mechanism for altimeter correction is automatic elevation state saving
 
 Since the accelerometer data is oriented as 0 degrees forward instead of 0 degrees north, the code has to find the offset to true north.  It does this by continuously monitoring the GPS bearing parameter, and when it has changed little for the last several seconds, it averages the GPS bearing and accelerometer bearing, and calculates the average difference between the two.  From that point on, the display will show the accelerometer bearing plus the difference (offset).  As you drive around, the offset will update again when you are driving straight.
 
-The bearing offset is also stored in the same state file that contains the last known elevation, and it is restored on power up.  That's another reason to keep the vehicle stopped until the PFD is up and receiving data.  Since the heading indicator and altimeter use the accelerometer and pressure sensors, the display still update even when the GPS signal is lost, like when driving through a tunnel.
+The bearing offset is also stored in the same state file that contains the last known elevation, and it is restored on power up.  Since the heading indicator and altimeter use the accelerometer and pressure sensors, the display still updates even when the GPS signal is lost, like when driving through a tunnel.
 
+## Time Display
 
+The date and time on the bottom right of the display comes from the GPS receiver, and is about as accurate as the screen refresh rate on the RPi.  When replaying canned data to the simulator, the time display represents the time that the data was collected and stored.  There is no need to synchronize the clock on the RPi to get accurate time.  The timezone is currently hard-coded to GMT minus 8 hours, and this needs to be moved to the config file.
+
+## FPS
+
+There is a Frames Per Second indicator on the bottom left.  This isn't necessary, but can be helpful for troubleshooting.
+
+## RX
+
+The RX1 and RX2 indicators show the receive status of the two sensor packs.  RX1 is for the Main Sensors, and RX2 is for the OAT Baro sensors.  They show green if the RPi has received a packet from the sensor pack within 0.15 seconds.  Since the data streams at 10Hz (every 0.1 seconds), the packet is late at 0.15 seconds.  When it is late, the light turns red.  When a packet is received again, the light turns green again.  
 
 [1]: https://www.adafruit.com/product/3133 "Ultimate GPS FeatherWing"
 [2]: https://www.adafruit.com/product/2472 "BNO055"
