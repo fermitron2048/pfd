@@ -63,19 +63,19 @@ struct packetInfoType {
 	float x;
 	float y;
 	float z;
-    float light;
-    double latitude;
-    double longitude;
-    double gpsAltitude;
-    double gpsSpeed;
-    double gpsBearing;
-    int year;
-    int month;
-    int day;
-    int hour;
-    int minute;
-    int second;
-    unsigned int millisecond;
+	float light;
+	double latitude;
+	double longitude;
+	double gpsAltitude;
+	double gpsSpeed;
+	double gpsBearing;
+	int year;
+	int month;
+	int day;
+	int hour;
+	int minute;
+	int second;
+	unsigned int millisecond;
 } packetData;
 
  void setup() {
@@ -114,40 +114,40 @@ struct packetInfoType {
 
 	// Setup BME280 (weather)
 	Serial.println("Starting BME280...");
-    if(!bme.begin()) {
-    	Serial.println("Could not find a valid BME280 sensor, check wiring!");
-    	while(1);
-    }
-    bme.setSampling(Adafruit_BME280::MODE_NORMAL,
+	if(!bme.begin()) {
+		Serial.println("Could not find a valid BME280 sensor, check wiring!");
+		while(1);
+	}
+	bme.setSampling(Adafruit_BME280::MODE_NORMAL,
                     Adafruit_BME280::SAMPLING_X16, // temperature
                     Adafruit_BME280::SAMPLING_X16, // pressure
                     Adafruit_BME280::SAMPLING_X16, // humidity
                     Adafruit_BME280::FILTER_OFF);
 
-    // Setup TSL2561 (lux sensor)
+	// Setup TSL2561 (lux sensor)
 	Serial.println("Starting TSL2561...");
-    if(!tsl.begin()) {
-    	Serial.print("Ooops, no TSL2561 detected ... Check your wiring or I2C ADDR!");
-    	while(1);
-    }
-    sensor_t sensor;
-    tsl.getSensor(&sensor);
-    Serial.println("------------------------------------");
-    Serial.print  ("Sensor:       "); Serial.println(sensor.name);
-    Serial.print  ("Driver Ver:   "); Serial.println(sensor.version);
-    Serial.print  ("Unique ID:    "); Serial.println(sensor.sensor_id);
-    Serial.print  ("Max Value:    "); Serial.print(sensor.max_value); Serial.println(" lux");
-    Serial.print  ("Min Value:    "); Serial.print(sensor.min_value); Serial.println(" lux");
-    Serial.print  ("Resolution:   "); Serial.print(sensor.resolution); Serial.println(" lux");
-    Serial.println("------------------------------------");
-    Serial.println("");
-    // tsl.setGain(TSL2561_GAIN_1X);      // No gain ... use in bright light to avoid sensor saturation
-    // tsl.setGain(TSL2561_GAIN_16X);     // 16x gain ... use in low light to boost sensitivity
-    tsl.enableAutoRange(true);            // Auto-gain ... switches automatically between 1x and 16x
-    // Changing the integration time gives you better sensor resolution (402ms = 16-bit data)
-    tsl.setIntegrationTime(TSL2561_INTEGRATIONTIME_13MS);      // fast but low resolution
-    // tsl.setIntegrationTime(TSL2561_INTEGRATIONTIME_101MS);  // medium resolution and speed
-    // tsl.setIntegrationTime(TSL2561_INTEGRATIONTIME_402MS);  // 16-bit data but slowest conversions
+	if(!tsl.begin()) {
+		Serial.print("Ooops, no TSL2561 detected ... Check your wiring or I2C ADDR!");
+		while(1);
+	}
+	sensor_t sensor;
+	tsl.getSensor(&sensor);
+	Serial.println("------------------------------------");
+	Serial.print  ("Sensor:       "); Serial.println(sensor.name);
+	Serial.print  ("Driver Ver:   "); Serial.println(sensor.version);
+	Serial.print  ("Unique ID:    "); Serial.println(sensor.sensor_id);
+	Serial.print  ("Max Value:    "); Serial.print(sensor.max_value); Serial.println(" lux");
+	Serial.print  ("Min Value:    "); Serial.print(sensor.min_value); Serial.println(" lux");
+	Serial.print  ("Resolution:   "); Serial.print(sensor.resolution); Serial.println(" lux");
+	Serial.println("------------------------------------");
+	Serial.println("");
+	// tsl.setGain(TSL2561_GAIN_1X);      // No gain ... use in bright light to avoid sensor saturation
+	// tsl.setGain(TSL2561_GAIN_16X);     // 16x gain ... use in low light to boost sensitivity
+	tsl.enableAutoRange(true);            // Auto-gain ... switches automatically between 1x and 16x
+	// Changing the integration time gives you better sensor resolution (402ms = 16-bit data)
+	tsl.setIntegrationTime(TSL2561_INTEGRATIONTIME_13MS);      // fast but low resolution
+	// tsl.setIntegrationTime(TSL2561_INTEGRATIONTIME_101MS);  // medium resolution and speed
+	// tsl.setIntegrationTime(TSL2561_INTEGRATIONTIME_402MS);  // 16-bit data but slowest conversions
 
 	// Connect to Wifi
 	Serial.print("\nConnecting to ");
@@ -240,14 +240,14 @@ void loop() {
 		packetData.sequenceNo = sequenceNo++;
 
 		// BME280
-	    Serial.print(temp.getAverage());
-	    Serial.print(",");
-	    Serial.print(String(pressure.getAverage(),5));
-	    Serial.print(",");
-	    Serial.print(humidity.getAverage());
-	    packetData.temperature = temp.getAverage();
-	    packetData.pressure = pressure.getAverage();
-	    packetData.humidity = humidity.getAverage();
+	    	Serial.print(temp.getAverage());
+	    	Serial.print(",");
+	    	Serial.print(String(pressure.getAverage(),5));
+	    	Serial.print(",");
+	    	Serial.print(humidity.getAverage());
+	    	packetData.temperature = temp.getAverage();
+	    	packetData.pressure = pressure.getAverage();
+	    	packetData.humidity = humidity.getAverage();
 
 		// BNO055
 		Serial.print(",");
@@ -266,17 +266,17 @@ void loop() {
 		packetData.light = tslEvent.light;
 
 		// GPS
-	    Serial.print(",");
-	    Serial.print(String(GPS.latitudeDegrees,6));
-	    Serial.print(",");
-	    Serial.print(String(GPS.longitudeDegrees,6));
-	    Serial.print(",");
-	    Serial.print(String(gpsAltitude,1));
-	    Serial.print(",");
-	    Serial.print(String(gpsSpeed,1));
-	    Serial.print(",");
-	    Serial.print(String(gpsBearing,1));
-	    Serial.print(",");
+	    	Serial.print(",");
+	    	Serial.print(String(GPS.latitudeDegrees,6));
+	    	Serial.print(",");
+	    	Serial.print(String(GPS.longitudeDegrees,6));
+	    	Serial.print(",");
+	    	Serial.print(String(gpsAltitude,1));
+	    	Serial.print(",");
+	    	Serial.print(String(gpsSpeed,1));
+	    	Serial.print(",");
+	    	Serial.print(String(gpsBearing,1));
+	    	Serial.print(",");
 		Serial.print(GPS.year);
 		Serial.print(",");
 		Serial.print(GPS.month);
