@@ -4,7 +4,7 @@ The sensor packs stream parameters to the RPi at 10Hz, after connecting to the S
 
 ## Main Sensors
 
-The Main Sensors provide the minimum parameters needed to run the PFD.  However, the code currently uses the barometric pressure sensors from the OAT Baro sensor pack, so if you don't make one of those, you'll need to update the code to use the barometric pressure sensor on the Main Sensors for that.  The BME280 pressure sensor has higher noise than the BMP388, so I stopped using it.  Anyway, here is a photo of my Main Sensors:
+The Main Sensors provide the minimum parameters needed to run the PFD.  However, the code currently uses the barometric pressure sensors from the OAT Baro sensor pack, so if you don't make one of those, you'll need to update the code to use the barometric pressure sensor on the Main Sensors.  The BME280 pressure sensor has higher noise than the BMP388, so I stopped using it.  Anyway, here is a photo of my Main Sensors:
 
 ![Main Sensors](../images/IMG_3571.jpg)
 
@@ -17,7 +17,7 @@ Here are the components I used for the main sensors:
 * [Perma-Proto board][9]
 * [2.1mm DC Barrel connector][11]
 
-I used a section of perma-proto board to wire everything together.  It is actually pretty straightfoward, since all of the daughter boards can be powered by 3.3v, and the microcontrollers are 3.3v and have a 3.3v regulator, it is just a matter of connecting all of the power and ground pins together.  Also, all of the daughter boards use I2C, so they can all use the same bus.  Here are the steps:
+I used a section of perma-proto board to wire everything together.  It is actually pretty straightfoward, since all of the daughter boards can be powered by 3.3v, and the microcontroller is 3.3v and has a 3.3v regulator, it is just a matter of connecting all of the power and ground pins together.  Also, all of the daughter boards use I2C, so they can all use the same bus.  Here are the steps:
 * Solder female headers onto the ESP32
 * Solder male headers onto the Ultimate GPS Featherwing
 * Solder a wire from the 3.3v regulator output on the ESP32 to the positive rail on the perma-proto board
@@ -32,15 +32,14 @@ Notes:
 * In the photo, I'm powering the ESP32 via USB temporarily, but it will use the 2.1mm jack during permanent installation
 
 When the hardware is ready, use the Arduino IDE to load the software onto the ESP32.  
-* You'll need to update the 
 
 ## OAT Baro Sensors
 
-This sensor pack has the high precision pressure sensors and outside air temperature sensor.  This one is a bit more complicated from the standpoint that we are using SPI and Dallas One Wire buses, but it's still relatively easy to assemble. Don't be deterred by the surface mount capacitors -- they're easier than you think to solder.  The black cable goes to the temperature sensor, and the gray cable goes to the 12v power in the vehicle.
+This sensor pack has the high precision pressure sensors and outside air temperature sensor.  This one is a bit more complicated from the standpoint that we are using SPI and Dallas One Wire buses, but it's still relatively easy to assemble. Don't be deterred by the surface mount capacitors -- they're easier than you think to solder.  The black cable goes to the temperature sensor, and the gray cable goes to the 12v power in the vehicle.  This sensor pack uses a more complicated power supply than the [5v Power Supply][10] above, so you can make this simpler by substituting the [V7805-1000][13] and the capacitors for the [5v Power Supply][10].
 
 ![OAT Baro Sensors](../images/IMG_3610.jpg)
 
-Here are the components I used for the OAT Baro sensor pack:
+Here are the components I used for this sensor pack:
 * Two [BMP388][6] low noise pressure sensors
 * [DS18B20][7] weatherproof temperature sensor (comes with 4.7k resistor)
 * [ESP8266][8] microcontroller
@@ -57,7 +56,10 @@ Since the BMP388's use SPI, they each need their own separate CS pin.  Here are 
 * CS 15 (Goes to one BMP388)
 * CS 4 (Goes to the other BMP388)
 
-In most cases, 3.3v is orange, and gnd is white/orange.  The exception is when I wired up pins 4 and 5; I ran out of the right colored wire.  I used [Scotch extreme 1" mounting tape][17] to fasten the circuit boards to the enclosure.  The holes for the cables are slightly larger than the cables, and they aren't sealed, so that the air pressure inside the enclosure matches the outside air pressure.
+Notes:
+* In most cases, 3.3v is orange, and gnd is white/orange.  The exception is when I wired up pins 4 and 5; I ran out of the right colored wire.  
+* I used [Scotch extreme 1" mounting tape][17] to fasten the circuit boards to the enclosure.  
+* The holes for the cables are slightly larger than the cables, and they aren't sealed, so that the air pressure inside the enclosure matches the outside air pressure.
 
 Here are the steps to assemble:
 * Solder the V7805-1000 to 3 separate rows on the perma-proto
