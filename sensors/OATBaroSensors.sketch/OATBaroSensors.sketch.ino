@@ -150,11 +150,11 @@ void loop() {
 
 	// Read BMP388
 	if(bmpTimer.getElapsedTime() >= 50) {
-	    temp1.addValue(ctof(bmp1.readTemperature()));
-	    pressure1.addValue(bmp1.readPressure() * 0.00029529983071445);
-	    temp2.addValue(ctof(bmp2.readTemperature()));
-	    pressure2.addValue(bmp2.readPressure() * 0.00029529983071445);
-	    bmpTimer.restartTimer();
+	    	temp1.addValue(ctof(bmp1.readTemperature()));
+	    	pressure1.addValue(bmp1.readPressure() * 0.00029529983071445);
+	    	temp2.addValue(ctof(bmp2.readTemperature()));
+	    	pressure2.addValue(bmp2.readPressure() * 0.00029529983071445);
+	    	bmpTimer.restartTimer();
 	}
 
 	// Read OAT (DS18S20)
@@ -172,20 +172,20 @@ void loop() {
 		// OAT sensor
 		Serial.print(oat);
 		Serial.print(",");
-	    packetData.oat = oat;
+	   	packetData.oat = oat;
 
 		// BMP388
-	    Serial.print(temp1.getAverage());
-	    Serial.print(",");
-	    Serial.print(String(pressure1.getAverage(),5));
-	    Serial.print(",");
-	    Serial.print(temp2.getAverage());
-	    Serial.print(",");
-	    Serial.println(String(pressure2.getAverage(),5));
-	    packetData.temperature1 = temp1.getAverage();
-	    packetData.pressure1 = pressure1.getAverage();
-	    packetData.temperature2 = temp2.getAverage();
-	    packetData.pressure2 = pressure2.getAverage();
+	    	Serial.print(temp1.getAverage());
+	    	Serial.print(",");
+	    	Serial.print(String(pressure1.getAverage(),5));
+	    	Serial.print(",");
+	    	Serial.print(temp2.getAverage());
+	    	Serial.print(",");
+	    	Serial.println(String(pressure2.getAverage(),5));
+	    	packetData.temperature1 = temp1.getAverage();
+	    	packetData.pressure1 = pressure1.getAverage();
+	    	packetData.temperature2 = temp2.getAverage();
+	    	packetData.pressure2 = pressure2.getAverage();
 
 		// Send packet
 		IPAddress remoteAddr;
