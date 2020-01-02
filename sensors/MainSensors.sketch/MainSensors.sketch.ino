@@ -115,8 +115,8 @@ struct packetInfoType {
 	// Setup BME280 (weather)
 	Serial.println("Starting BME280...");
     if(!bme.begin()) {
-      Serial.println("Could not find a valid BME280 sensor, check wiring!");
-      while(1);
+    	Serial.println("Could not find a valid BME280 sensor, check wiring!");
+    	while(1);
     }
     bme.setSampling(Adafruit_BME280::MODE_NORMAL,
                     Adafruit_BME280::SAMPLING_X16, // temperature
@@ -127,8 +127,8 @@ struct packetInfoType {
     // Setup TSL2561 (lux sensor)
 	Serial.println("Starting TSL2561...");
     if(!tsl.begin()) {
-      Serial.print("Ooops, no TSL2561 detected ... Check your wiring or I2C ADDR!");
-      while(1);
+    	Serial.print("Ooops, no TSL2561 detected ... Check your wiring or I2C ADDR!");
+    	while(1);
     }
     sensor_t sensor;
     tsl.getSensor(&sensor);
